@@ -37,6 +37,7 @@ class api_ProcessRecurringTest extends \PHPUnit_Framework_TestCase implements He
    * Test the process recurring job.
    */
   public function testProcessRecurring() {
+    CRM_Core_Config::singleton()->userSystem->setMySQLTimeZone();
     $this->addMockTokenResponse();
     $response = $this->getResponseBody();
     $this->getMockClient()->addResponse(new Response(201, [], json_encode($response)));
