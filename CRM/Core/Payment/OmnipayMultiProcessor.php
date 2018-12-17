@@ -1134,7 +1134,9 @@ class CRM_Core_Payment_OmnipayMultiProcessor extends CRM_Core_Payment_PaymentExt
    */
   public function doPostApproval(&$params) {
     if (!method_exists($this->gateway, 'completeCreateCard')
-      || empty($params['post_authorize'])) {
+      || empty($params['post_authorize'])
+      || empty($params['is_recur'])
+    ) {
       return;
     }
 
