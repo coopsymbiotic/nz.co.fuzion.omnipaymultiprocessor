@@ -47,8 +47,8 @@ class api_ProcessRecurringTest extends \PHPUnit_Framework_TestCase implements He
 
     $processor = $this->callAPISuccess('PaymentProcessor', 'create', [
       'payment_processor_type_id' => 'omnipay_PayPal_Rest',
-      'user_name' => 'AWzymvrczbgFT9CuhILzNXnXFyLXsxa8lacr_TJbOT4ytdRuaKnr73t1kOIdwbSTmnjTuajgKaiZCjqR',
-      'password' => 'EANpVE9liVxABP173oGLic1fhoK2gixGeVCrXjR4Q_dpO2FLMMTtyYSmhhe5IZDaQaPUsmc4Jkx7CQGy',
+      'user_name' => 'ABC',
+      'password' => 'DEF',
       'is_test' => 1,
       'is_active' => 1,
     ]);
@@ -63,6 +63,7 @@ class api_ProcessRecurringTest extends \PHPUnit_Framework_TestCase implements He
       'next_sched_contribution_date' => 'today',
       'contact_id' => $contact['id'],
       'frequency_interval' => 1,
+      'frequency_unit' => 'month',
       'amount' => 10,
       'contribution_status_id' => 'Pending',
       'is_test' => TRUE,
@@ -78,9 +79,10 @@ class api_ProcessRecurringTest extends \PHPUnit_Framework_TestCase implements He
       'contribution_recur_id' => $contributionRecur['id'],
       'payment_processor_id' => $processor['id'],
     ]);
+    $this->callAPISuccess('ContributionRecur', 'create', ['id' => $contributionRecur['id'], 'next_sched_contribution_date' => 'today']);
 
     $result = $this->callAPISuccess('Job', 'process_recurring', [])['values'];
-    $this->assertEquals(1, count($result['success']));
+    $this->assertEquals(1, count($result['success']), print_r($result, 1));
 
     $outbound = $this->getRequestBodies();
     $paymentRequest = json_decode($outbound[1], TRUE);
